@@ -9,12 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
 {
-    Schema::table('courses', function (Blueprint $table) {
-        $table->string('category')->nullable()->after('description');
-    });
+    if (!Schema::hasColumn('courses', 'category')) {
+        Schema::table('courses', function (Blueprint $table) {
+            $table->string('category')->nullable();
+        });
+    }
 }
+
 
 public function down(): void
 {

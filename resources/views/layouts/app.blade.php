@@ -1,55 +1,51 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Edu Fairuzullah LMS</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{{ config('app.name', 'Edu LMS') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+<body class="bg-gray-100 font-sans antialiased">
 
-    <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="/">Edu Fairuzullah LMS</a>
+    <!-- NAVBAR -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="{{ route('home') }}" class="text-xl font-bold text-indigo-600">
+                EduLMS
+            </a>
 
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/courses">Courses</a>
-                    </li>
+            <div class="space-x-4">
+                @guest
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-indigo-600">
+                        Login
+                    </a>
+                    <a href="{{ route('register') }}"
+                       class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
+                        Register
+                    </a>
+                @else
+                    <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-indigo-600">
+                        Dashboard
+                    </a>
 
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="btn btn-link nav-link">Logout</button>
-                            </form>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Educator / Learner Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Register</a>
-                        </li>
-                    @endauth
-                </ul>
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button class="text-red-500 hover:text-red-700">
+                            Logout
+                        </button>
+                    </form>
+                @endguest
             </div>
         </div>
     </nav>
 
-    <main class="container py-4">
-        {{ $slot }}
+    <!-- PAGE CONTENT -->
+    <main>
+        @yield('content')
     </main>
-</body>
 
+</body>
 </html>

@@ -1,38 +1,41 @@
-<x-app-layout>
-    <h2 class="mb-4">Available Courses</h2>
+@extends('layouts.app')
 
-    @if(auth()->check() && auth()->user()->role === 'educator')
-        <a href="{{ route('courses.create') }}" class="btn btn-success mb-3">
-            + Add Course
-        </a>
-    @endif
+@section('content')
+<div class="max-w-6xl mx-auto p-6">
 
-    <div class="row">
-        @forelse($courses as $course)
-            <div class="col-md-4 mb-3">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $course->title }}</h5>
-                        <p class="card-text">{{ $course->description }}</p>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Courses</h1>
 
-                        @if(auth()->check() && auth()->user()->role === 'educator')
-                            <a href="{{ route('courses.edit', $course) }}" class="btn btn-sm btn-warning">
-                                Edit
-                            </a>
-
-                            <form method="POST" action="{{ route('courses.destroy', $course) }}" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger">
-                                    Delete
-                                </button>
-                            </form>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        @empty
-            <p>No courses available.</p>
-        @endforelse
+        @if(auth()->user()->role === 'educator')
+            <a href="{{ route('courses.create') }}"
+               class="bg-indigo-600 text-white px-4 py-2 rounded-lg">
+                + Add Course
+            </a>
+        @endif
     </div>
-</x-app-layout>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @foreach($courses as $course)
+            <div class="bg-white rounded-xl shadow p-4">
+                <h2 class="font-bold text-lg">{{ $course->title }}</h2>
+                <p class="text-gray-600 text-sm mt-2">
+                    {{ Str::limit($course->description, 100) }}
+                </p>
+
+                @if(auth()->user()->role === 'educator')
+                    <div class="flex gap-2 mt-4">
+                        <a href="{{ route('courses.edit', $course) }}"
+                           class="text-blue-600">Edit</a>
+
+                        <form method="POST" action="{{ route('courses.destroy', $course) }}">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-red-600">Delete</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        @endforeach
+    </div>
+</div>
+@endsection

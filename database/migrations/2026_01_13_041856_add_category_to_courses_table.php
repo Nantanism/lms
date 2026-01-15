@@ -21,9 +21,13 @@ return new class extends Migration
 
 public function down(): void
 {
-    Schema::table('courses', function (Blueprint $table) {
-        $table->dropColumn('category');
-    });
+    // Only drop if the column exists
+    if (Schema::hasColumn('courses', 'category')) {
+        Schema::table('courses', function (Blueprint $table) {
+            $table->dropColumn('category');
+        });
+    }
 }
+
 
 };
